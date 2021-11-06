@@ -85,9 +85,14 @@ function initialize_population(population, n=20)
 end
 
 # Sorting the current generation and returning top x of the generation as possible parents
-function select_tournament(population, generation=1, number=10)
+function select_parents(population, generation=1, number=10)
     population[generation].individuals = sort(population[generation].individuals, by=v -> v.fit)
 	return population[generation].individuals[1:number]
+end
+
+function select_parents_generation(generation::Generation, generation_quantity::Int, number=10)
+    generation.individuals = sort(generation.individuals, by=v -> v.fit)[1:generation_quantity]
+	return generation
 end
 
 function show_generation(population, generation)
@@ -132,6 +137,43 @@ function evaluate_generation(data, population, population_quantity, data_quantit
 	end
 end
 
+function evaluate_generation(data, generation::Generation, population_quantity, data_quantity)
+    
+
+    # For every individual
+	for i in 1:population_quantity
+        # if have not been evaluated
+        if isempty(generation.individuals[i].diffarr)
+            # add empty vector
+            append!(generation.individuals[i].diffarr, Vector())
+
+            # For every x in acquired data
+            for j in 1:Int(floor(data_quantity/2))
+                # add evaluation at x(i) with a b and c of individual
+                append!(
+                    generation.individuals[i].diffarr, 
+                    output_function(data, generation.individuals[i].chromosome, j)
+                )
+            end
+            # Calculate fittness value based on difference of value of y(i) and evaluated value for individual
+            generation.individuals[i].fit = std(data[(Int(data_quantity/2) + 1):data_quantity]-generation.individuals[i].diffarr)^2
+        else
+            generation.individuals[i].diffarr = Vector()
+            # For every x in acquired data
+            for j in 1:Int(floor(data_quantity/2))
+                # add evaluation at x(i) with a b and c of individual
+                append!(
+                    generation.individuals[i].diffarr, 
+                    output_function(data, generation.individuals[i].chromosome, j)
+                )
+            end
+            # Calculate fittness value based on difference of value of y(i) and evaluated value for individual
+            generation.individuals[i].fit = std(data[(Int(data_quantity/2) + 1):data_quantity]-generation.individuals[i].diffarr)^2
+        end
+	end
+    return generation
+end
+
 function evaluate_individual(data, individual, data_quantity)
     if isempty(individual.diffarr)
         append!(individual.diffarr, Vector())
@@ -147,8 +189,9 @@ end
 
 function new_generation_genetic(data, data_quantity, population, selected)
     offspring = crossover(data, data_quantity, population, selected, rand(1:2))
-    offspring = mutation(offspring)
-    return Generation(Vector{Invi}(vcat(selected, offspring)))
+    offspring = Generation(mutation(offspring))
+    offspring = evaluate_generation(data, offspring, length(population[1].individuals), data_quantity)
+    return select_parents_generation(Generation(Vector{Invi}(vcat(selected, offspring.individuals))), length(population[1].individuals), 20)
 end
 
 function new_generation_evolution(data, data_quantity, population, selected)
@@ -157,16 +200,17 @@ function new_generation_evolution(data, data_quantity, population, selected)
     return Generation(Vector{Invi}(vcat(selected, offspring)))
 end
 
-function mutation(offspring)
+function mutation(offspring, gens_count=3)
     len = length(offspring)
     for i in 1:len
-        for gen in 1:3
+        gen_tau_1 = exp(rand(Normal(0, τ₁)))
+        for gen in 1:gens_count
             offspring[i].chromosome[gen] = offspring[i].chromosome[gen] + rand(Normal(
                 0,
                 offspring[i].σ[gen]
             ))
 
-            offspring[i].σ[gen] = offspring[i].σ[gen]*exp(rand(Normal(0, τ₁)))*exp(rand(Normal(0, τ₂)))
+            offspring[i].σ[gen] = offspring[i].σ[gen]*gen_tau_1*exp(rand(Normal(0, τ₂)))
 
         end
     end
@@ -177,7 +221,7 @@ function crossover(data, data_quantity, population, selected, separator)
     len_s = length(selected)
     len_p = length(population[1].individuals)
     offspring = []
-    for i in 1:(len_p-len_s)
+    for i in 1:(len_p-len_s)*5
         parent1 = rand(1:len_s)
         leftover = [r for r in 1:len_s-1 if r!=parent1]
         parent2 = rand(leftover)
@@ -225,7 +269,6 @@ function EvolutionAlgorithm(data, population_quantity::Int=200, epsilon=0.000001
     if top == NaN
         top = Int(floor(population_quantity/2))
     end
-    iteration = 0
     generation = 1
     population = []
     data_quantity = length(data)
@@ -234,13 +277,13 @@ function EvolutionAlgorithm(data, population_quantity::Int=200, epsilon=0.000001
     initialize_population(population, population_quantity)
     evaluate_generation(data, population, population_quantity, data_quantity, generation)
 
-    while iteration < 39
-        iteration += 1
+    while generation < 40
         
-        selected = select_tournament(population, generation, top)
+        selected = select_parents(population, generation, top)
         next_generation = new_generation_genetic(data, data_quantity, population, selected)
         generation +=1
-        
+        # 5 razy więcej potomków
+        # ( λ + γ ) approach
         
         # new_best = next_generation.individuals[1].fit
         # for sel in next_generation.individuals[2:10]
@@ -266,14 +309,18 @@ function EvolutionAlgorithm(data, population_quantity::Int=200, epsilon=0.000001
         
     end
 
-    # show_generation(population, generation)
-    return select_tournament(population, generation, top)
+    show_generation(population, generation)
+    return select_parents(population, generation, top)
+end
+
+function write_results(population)
+    #
 end
 
 
 function main()
-    data = readdlm("ES_data_30.dat")
-    best = EvolutionAlgorithm(data, 100, 1e-6, 50, 0.6)
+    data = readdlm("ES_data_14.dat")
+    best = EvolutionAlgorithm(data, 100, 1e-6, 10, 0.6)
 
     p1 = plot([data[i] for i in 1:101], [output_function(data, best[1].chromosome, i) for i in 1:101])
     p2 = plot([data[i] for i in 1:101],[[data[i] for i in 102:202], [output_function(data, best[1].chromosome, i) for i in 1:101]])
