@@ -2,7 +2,8 @@ using Random            # For random values
 using Statistics        # For Mean and standard deviation
 using Distributions     # For Normal distributions 
 using Plots             # For Plotting the results and the original data
-using DelimitedFiles    # 
+using DelimitedFiles    # For efficient handling of delimited files
+using JSON              # For saving the results in structured format
 
 
 # Taus for the new sigma calcualtions with Normal distribution
@@ -138,8 +139,6 @@ function evaluate_generation(data, population, population_quantity, data_quantit
 end
 
 function evaluate_generation(data, generation::Generation, population_quantity, data_quantity)
-    
-
     # For every individual
 	for i in 1:population_quantity
         # if have not been evaluated
@@ -175,28 +174,42 @@ function evaluate_generation(data, generation::Generation, population_quantity, 
 end
 
 function evaluate_individual(data, individual, data_quantity)
+    # if difference array is empty, proceed
     if isempty(individual.diffarr)
+        # initialize vector in diffarray
         append!(individual.diffarr, Vector())
+        # For every x in acquired data
         for j in 1:Int(floor(data_quantity/2))
+            # add evaluation for individual with his a, b, and c 
             append!(
                 individual.diffarr, 
                 output_function(data, individual.chromosome, j)
             )
         end 
+        # Calculate fittness
         individual.fit = ((data[(Int(data_quantity/2) + 1):data_quantity]-individual.diffarr).^2)/Int(data_quantity/2)
     end
 end
 
-function new_generation_genetic(data, data_quantity, population, selected)
+function new_generation_evo(data, data_quantity, population, selected)
+    # Make crossover based on selected data and generate 5*population quantity of children
     offspring = crossover(data, data_quantity, population, selected, rand(1:2))
+    # Mutate all of children
     offspring = Generation(mutation(offspring))
+    # Mutate parents
+    selected = mutation(selected)
+    # Evaluate new generation
     offspring = evaluate_generation(data, offspring, length(population[1].individuals), data_quantity)
+    # Select the best from the population λ + γ and return
     return select_parents_generation(Generation(Vector{Invi}(vcat(selected, offspring.individuals))), length(population[1].individuals), 20)
 end
 
-function new_generation_evolution(data, data_quantity, population, selected)
+function new_generation_gen(data, data_quantity, population, selected)
+    # crossover generating childs up to yhr population quantity
     offspring = crossover_evo(population, selected)
+    # Mutate all of the children
     offspring = mutation(offspring)
+    # Return the new generation
     return Generation(Vector{Invi}(vcat(selected, offspring)))
 end
 
@@ -265,7 +278,8 @@ function cross_one(parent_first)
     return individual
 end
 
-function EvolutionAlgorithm(data, population_quantity::Int=200, epsilon=0.000001, top=NaN, max_deviation=0.4)
+function EvolutionAlgorithm(data, population_quantity::Int=200, epsilon=0.000001, top=NaN, save_results::Bool=false)
+    # TODO: Get rid of top
     if top == NaN
         top = Int(floor(population_quantity/2))
     end
@@ -277,27 +291,19 @@ function EvolutionAlgorithm(data, population_quantity::Int=200, epsilon=0.000001
     initialize_population(population, population_quantity)
     evaluate_generation(data, population, population_quantity, data_quantity, generation)
 
-    while generation < 40
-        
+    while true
         selected = select_parents(population, generation, top)
-        next_generation = new_generation_genetic(data, data_quantity, population, selected)
+        next_generation = new_generation_evo(data, data_quantity, population, selected)
         generation +=1
-        # 5 razy więcej potomków
-        # ( λ + γ ) approach
-        
-        # new_best = next_generation.individuals[1].fit
-        # for sel in next_generation.individuals[2:10]
-        #     new_best = new_best + sel.fit
-        # end
-        # new_best = new_best/10
-        new_best = next_generation.individuals[1].fit
-
-        # if abs(next_generation.individuals[1].fit - best) >= epsilon
-        #     best = next_generation.individuals[1].fit
-        # else
-        #     break
-        # end
         append!(population, next_generation)
+        best = population[generation].individuals[1].fit
+        new_best = population[generation].individuals[1+top].fit
+
+        if abs(new_best - best) >= epsilon
+            best = new_best
+        else
+            break
+        end
 
         evaluate_generation(
             data, population, 
@@ -305,22 +311,40 @@ function EvolutionAlgorithm(data, population_quantity::Int=200, epsilon=0.000001
             data_quantity, 
             generation
         )
-
-        
     end
 
     show_generation(population, generation)
+    
+    if save_results
+        write_results(population)
+    end
     return select_parents(population, generation, top)
 end
 
 function write_results(population)
-    #
+    pop = []
+    individuals = []
+    for gen in 1:length(population)
+        for individual in 1:length(population[gen].individuals)
+            append!(individuals, Dict(individual => Dict(
+                "chromosome" => population[gen].individuals[individual].chromosome,
+                "σ"          => population[gen].individuals[individual].σ,
+                "fit"        => population[gen].individuals[individual].fit
+            )))
+        end
+        append!(pop, Dict(gen => individuals))
+    end
+
+    JSON.json(pop)
+    open("Results.json", "w+") do f
+        JSON.print(f, pop, 2)
+    end
 end
 
 
 function main()
     data = readdlm("ES_data_14.dat")
-    best = EvolutionAlgorithm(data, 100, 1e-6, 10, 0.6)
+    best = EvolutionAlgorithm(data, 100, 1e-6, 10, false)
 
     p1 = plot([data[i] for i in 1:101], [output_function(data, best[1].chromosome, i) for i in 1:101])
     p2 = plot([data[i] for i in 1:101],[[data[i] for i in 102:202], [output_function(data, best[1].chromosome, i) for i in 1:101]])
