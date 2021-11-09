@@ -1,1 +1,6 @@
-# GeneticAlgs
+# EvoStrats
+
+## Introduction
+
+### What are Evolutionar Strategies?
+
