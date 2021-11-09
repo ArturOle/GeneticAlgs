@@ -385,7 +385,7 @@ function EvolutionAlgorithm(data, population_quantity::Int=200, epsilon=0.000001
         )
     end
 
-    show_generation(population, generation)
+    # show_generation(population, generation)
     
     if save_results
         write_results(population)
