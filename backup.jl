@@ -350,7 +350,7 @@ function cross_one(parent_first)
     return individual
 end
 
-function EvolutionAlgorithm(data, population_quantity::Int=200, epsilon=0.000001, save_results::Bool=false, selection_method::String="SteadyStateSelection")
+function EvolutionAlgorithm(data, population_quantity::Int=200, epsilon=0.000001, save_results::Bool=false, selection_method::String="RuletteSelection")
     generation = 1
     population = []
     data_quantity = length(data)
@@ -359,7 +359,7 @@ function EvolutionAlgorithm(data, population_quantity::Int=200, epsilon=0.000001
     evaluate_generation(data, population, population_quantity, data_quantity, generation)
     population[1] = sort_generation(population[1], population_quantity)
 
-    while true
+    while generation < population_quantity
         if selection_method == "RuletteSelection"
             selected = rulette_selection(population, generation)
         else
@@ -369,8 +369,7 @@ function EvolutionAlgorithm(data, population_quantity::Int=200, epsilon=0.000001
         generation +=1
         append!(population, next_generation)
         new_best = population[generation].individuals[1].fit
-        best = population[generation].individuals[Int(floor(population_quantity/10))+1].fit
-
+        best = mean([x.fit for x in population[generation-1].individuals[1:2]])
         if abs(new_best - best) > epsilon
             best = new_best
         else
@@ -391,7 +390,7 @@ function EvolutionAlgorithm(data, population_quantity::Int=200, epsilon=0.000001
     if save_results
         write_results(population)
     end
-    return select_parents(population, generation, top)
+    return select_parents(population, generation)
 end
 
 function write_results(population)
@@ -417,7 +416,7 @@ end
 
 function main()
     data = readdlm("ES_data_14.dat")
-    best = EvolutionAlgorithm(data, 100, 1e-6, 10, false)
+    best = EvolutionAlgorithm(data, 100, 1e-6, false, "RuletteSelection")
 
     p1 = plot([data[i] for i in 1:101], [output_function(data, best[1].chromosome, i) for i in 1:101])
     p2 = plot([data[i] for i in 1:101],[[data[i] for i in 102:202], [output_function(data, best[1].chromosome, i) for i in 1:101]])
