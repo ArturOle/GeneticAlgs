@@ -91,10 +91,12 @@ function select_parents(population, generation=1, number=10)
 	return population[generation].individuals[1:number]
 end
 
+# sorting the generation by the value
 function select_parents_generation(generation::Generation, generation_quantity::Int, number=10)
     generation.individuals = sort(generation.individuals, by=v -> v.fit)[1:generation_quantity]
 	return generation
 end
+
 
 function show_generation(population, generation)
     for i in 1:length(population[generation].individuals)
@@ -102,6 +104,7 @@ function show_generation(population, generation)
     end
 end
 
+# Calculates the fitness value for every individual
 function evaluate_generation(data, population, population_quantity, data_quantity, generation=1)
     this = population[generation].individuals
 
@@ -213,20 +216,29 @@ function new_generation_gen(data, data_quantity, population, selected)
     return Generation(Vector{Invi}(vcat(selected, offspring)))
 end
 
+# Mutation based on the taus and Normal random distributions
 function mutation(offspring, gens_count=3)
+    # Length of given ofspring vector
+    nr_of_genes = length(offspring[1].chromosome)
     len = length(offspring)
+    # For every individual 
     for i in 1:len
+        # calculate τ₁ for given chromosome
         gen_tau_1 = exp(rand(Normal(0, τ₁)))
-        for gen in 1:gens_count
+        # For every gen in chromosome
+        for gen in 1:nr_of_genes
+
+            # Mutate every gene
             offspring[i].chromosome[gen] = offspring[i].chromosome[gen] + rand(Normal(
                 0,
                 offspring[i].σ[gen]
             ))
-
+            # Mutate every σ
             offspring[i].σ[gen] = offspring[i].σ[gen]*gen_tau_1*exp(rand(Normal(0, τ₂)))
 
         end
     end
+    # REsturn the offspring after mutation
     return offspring
 end
 
@@ -234,13 +246,20 @@ function crossover(data, data_quantity, population, selected, separator)
     len_s = length(selected)
     len_p = length(population[1].individuals)
     offspring = []
-    for i in 1:(len_p-len_s)*5
+
+    # We are generating 5*difference between the sizes of the base population 
+    for i in 1:len_p*5
+        # Choosing the first parent randomly
         parent1 = rand(1:len_s)
-        leftover = [r for r in 1:len_s-1 if r!=parent1]
+        # Choosing the second parent randomly from population without parent1
+        leftover = [r for r in 1:len_s-1 if r!=parent1]  
         parent2 = rand(leftover)
+        # Creating Child
         child = cross_two(data, data_quantity, selected[parent1], selected[parent2], separator)
+        # Adding the child to the offspring
         append!(offspring, child)
     end
+    # Return the offspring
     return offspring
 end
 
@@ -256,6 +275,7 @@ function crossover_evo(population, selected)
 end
 
 function cross_two(data, data_quantity, parent_first, parent_second, separator)
+    # Creating the child based on the prroperties of the parents
     individual = Invi(
         vcat(parent_first.chromosome[1:separator], parent_second.chromosome[separator+1:end]),
         [ 0.5*(parent_first.σ[1] + parent_second.σ[1]), 0.5*(parent_first.σ[2] + parent_second.σ[2]), 0.5*(parent_first.σ[3] + parent_second.σ[3])],
@@ -273,16 +293,11 @@ function cross_one(parent_first)
         NaN,
         []
     )
-    
-    
     return individual
 end
 
-function EvolutionAlgorithm(data, population_quantity::Int=200, epsilon=0.000001, top=NaN, save_results::Bool=false)
-    # TODO: Get rid of top
-    if top == NaN
-        top = Int(floor(population_quantity/2))
-    end
+function EvolutionAlgorithm(data, population_quantity::Int=200, epsilon=0.000001, save_results::Bool=false)
+    top = Int(floor(population_quantity/10))
     generation = 1
     population = []
     data_quantity = length(data)
@@ -344,7 +359,7 @@ end
 
 function main()
     data = readdlm("ES_data_14.dat")
-    best = EvolutionAlgorithm(data, 100, 1e-6, 10, false)
+    best = EvolutionAlgorithm(data, 100, 1e-6, false)
 
     p1 = plot([data[i] for i in 1:101], [output_function(data, best[1].chromosome, i) for i in 1:101])
     p2 = plot([data[i] for i in 1:101],[[data[i] for i in 102:202], [output_function(data, best[1].chromosome, i) for i in 1:101]])
