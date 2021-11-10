@@ -203,14 +203,43 @@ end
 
 ```
 
+After this, new generation is being evaluated for the fitness values, sorted and choppend to the proper population size.
+
+#
+## Stop condition
+
+The mechanism which main purpouse is to prevent the algorithm from going into infinity.
+There are two things which can stop main loop:
+
+1. Checking of the result improvements.
+
+When the algorithm is showing any progress then we are stoping the loop.
+We use the absolute value of subraction of best fitnes value from current generation from the best fitness value from previous generation.
+
+2. Generation limit
+
+To avoid too long execution times which could took infinitly lon,g taking into account the random nature of the algorithm, we cap the number of generations. If generation > max then end.
 
 
+# Experimentation
+With epsilon equal to 1e-6
 
+|Tries|Population Szie|Fitness|Selection Method|Time|Generations|
+|-        |-|-|-|-|-|
+|Warmup   |100|0.256939 |"Steady State"|2.806s|70|
+|1        |100|0.256939 |"Steady State"|1.538s|40|
+|2        |100|0.256939 |"Steady State"|2.091s|74|
+|3        |100|0.256939 |"Steady State"|1.778s|53|
+|4        |100|25.556459|"Steady State"|1.673s|53|
+|5        |100|0.256838 |"Steady State"|1.811s|50|
+|6        |100|0.256939 |"Steady State"|1.916s|56|
+|7        |100|0.256939 |"Steady State"|1.792s|60|
+|8        |100|0.256939 |"Steady State"|1.877s|54|
+|9        |100|0.256939 |"Steady State"|1.799s|67|
+|10       |100|0.256939 |"Steady State"|1.932s|61|
 
-
-
-
-
-
+|Mean Fitness|Mean Time|Mean Generations|
+|-|-|-|
+| | | |
 
 
