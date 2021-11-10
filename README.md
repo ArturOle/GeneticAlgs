@@ -87,7 +87,27 @@ In this way we have chance equal 1 to choose the best candidate and other candid
 
 
 ```julia
+function rulette_selection(generation::Generation, desired_quantity::Int)
+    result = Vector{Invi}()
+    population = sort_generation(generation, desired_quantity)
+    best = population.individuals[1].fit
 
+    for individual in population.individuals
+        probability = (best)/individual.fittness
+        print(probability)
+        chance = rand(Uniform(0.0, 1.0))
+        if probability > chance
+            append!(result, individual)
+        end
+    end
+
+    # Just to assure there are at least 2 individuals in the new mating pool
+    if length(result) < 2
+        append!(result, population.individuals[best_index])
+    end
+    
+    return Generation(result)
+end
 ```
 
 ### Steady State Selection
@@ -96,18 +116,92 @@ Second implementation is the **Solid State Selection**.
 In this method we sort the whole population by fitness value and choose x of the best candidates. The x is dependent on the population size and in our implementation is calculated as population_quantity / 10 to get 10% of current generation.
 
 ```julia
-function select_parents(population, generation=1, number=10)
+function select_parents(population, generation, number)
     population[generation].individuals = sort(population[generation].individuals, by=v -> v.fit)
 	return population[generation].individuals[1:number]
 end
 ```
+#
+## Generating the new Generation
+
+After selecting the candidates for maiting pool we can proceed to creating new generation.
+In our implementation we start with crossover of individuals in selection (mating pool).
+
+```julia
+function new_generation_evo(data, data_quantity, population, selected)
+    # Make crossover based on selected data and generate 5*population quantity of children
+    offspring = crossover(data, data_quantity, population, selected, rand(1:2))
+    # Mutate all of children
+    offspring = Generation(mutation(offspring))
+    # Mutate parents
+    selected = mutation(selected)
+    # Evaluate new generation
+    offspring = evaluate_generation(data, offspring, length(population[1].individuals), data_quantity)
+    # Select the best from the population λ + γ and return
+    return select_parents_generation(Generation(Vector{Invi}(vcat(selected, offspring.individuals))), length(population[1].individuals), 20)
+end
+```
 
 
+The crossover is randomized process of children production. We select pair of parents and exchange their genes in the chomosome. The part of chromosome being exchanged is uniformly random but always they exchange something.
+
+```julia
+function crossover(data, data_quantity, population, selected, separator)
+    len_s = length(selected)
+    len_p = length(population[1].individuals)
+    offspring = []
+
+    # We are generating 5*difference between the sizes of the base population 
+    for i in 1:len_p*5
+        # Choosing the first parent randomly
+        parent1 = rand(1:len_s)
+        # Choosing the second parent randomly from population without parent1
+        leftover = [r for r in 1:len_s-1 if r!=parent1]  
+        parent2 = rand(leftover)
+        # Creating Child
+        child = cross_two(data, data_quantity, selected[parent1], selected[parent2], separator)
+        # Adding the child to the offspring
+        append!(offspring, child)
+    end
+    # Return the offspring
+    return offspring
+end
+
+```
+
+After succesfull crossover it is time to mutate both parents whom got into the mating pool and the freshly generated offspring. 
+
+The mutation is done with the gen-support variables $\sigma_{a,b,c}$, and the constants $\tau_1$, and $\tau_2$.
 
 
+```julia
+# Mutation based on the taus and Normal random distributions
+function mutation(offspring, gens_count=3)
+    # Length of given ofspring vector
+    nr_of_genes = length(offspring[1].chromosome)
+    len = length(offspring)
+    # For every individual 
+    for i in 1:len
+        # calculate τ₁ for given chromosome
+        gen_tau_1 = exp(rand(Normal(0, τ₁)))
+        # For every gen in chromosome
+        for gen in 1:nr_of_genes
 
+            # Mutate every gene
+            offspring[i].chromosome[gen] = offspring[i].chromosome[gen] + rand(Normal(
+                0,
+                offspring[i].σ[gen]
+            ))
+            # Mutate every σ
+            offspring[i].σ[gen] = offspring[i].σ[gen]*gen_tau_1*exp(rand(Normal(0, τ₂)))
 
+        end
+    end
+    # REsturn the offspring after mutation
+    return offspring
+end
 
+```
 
 
 
