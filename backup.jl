@@ -357,9 +357,10 @@ function write_results(population)
 end
 
 
+
 function main()
     data = readdlm("ES_data_14.dat")
-    best = EvolutionAlgorithm(data, 100, 1e-6, false)
+    best = EvolutionAlgorithm(data, 100, 1e-6, true)
 
     p1 = plot([data[i] for i in 1:101], [output_function(data, best[1].chromosome, i) for i in 1:101])
     p2 = plot([data[i] for i in 1:101],[[data[i] for i in 102:202], [output_function(data, best[1].chromosome, i) for i in 1:101]])
