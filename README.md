@@ -226,20 +226,111 @@ With epsilon equal to 1e-6
 
 |Tries|Population Szie|Fitness|Selection Method|Time|Generations|
 |-        |-|-|-|-|-|
-|Warmup   |100|0.256939 |"Steady State"|2.806s|70|
-|1        |100|0.256939 |"Steady State"|1.538s|40|
-|2        |100|0.256939 |"Steady State"|2.091s|74|
-|3        |100|0.256939 |"Steady State"|1.778s|53|
-|4        |100|25.556459|"Steady State"|1.673s|53|
-|5        |100|0.256838 |"Steady State"|1.811s|50|
-|6        |100|0.256939 |"Steady State"|1.916s|56|
-|7        |100|0.256939 |"Steady State"|1.792s|60|
-|8        |100|0.256939 |"Steady State"|1.877s|54|
-|9        |100|0.256939 |"Steady State"|1.799s|67|
-|10       |100|0.256939 |"Steady State"|1.932s|61|
+|Warmup   |100| |"Steady State"|||
+|1        |100| |"Steady State"|||
+|2        |100| |"Steady State"|||
+|3        |100| |"Steady State"|||
+|4        |100||"Steady State"|||
+|5        |100| |"Steady State"|||
+|6        |100| |"Steady State"|||
+|7        |100| |"Steady State"|||
+|8        |100| |"Steady State"|||
+|9        |100| |"Steady State"|||
+|10       |100| |"Steady State"|||
+
+|Mean Fitness|Mean Time|Mean Generations|
+|-|-|-|
+| | | |
+
+|Tries|Population Szie|Fitness|Selection Method|Time|Generations|
+|-        |-|-|-|-|-|
+|Warmup   |100|0.256941|"Rulette"|2.478s|48|
+|1        |100|0.256939|"Rulette"|1.418s|46|
+|2        |100|0.256943|"Rulette"|1.500s|35|
+|3        |100|0.256939|"Rulette"|1.636s|56|
+|4        |100|0.256939|"Rulette"|1.359s|40|
+|5        |100|0.256940|"Rulette"|1.749s|51|
+|6        |100|0.256940|"Rulette"|1.943s|64|
+|7        |100|0.256942|"Rulette"|1.614s|57|
+|8        |100|0.256939|"Rulette"|1.818s|59|
+|9        |100|0.256941|"Rulette"|1.312s|40|
+|10       |100|0.256940|"Rulette"|1.623s|56|
+
 
 |Mean Fitness|Mean Time|Mean Generations|
 |-|-|-|
 | | | |
 
 
+
+|Tries|Population Szie|Fitness|Selection Method|Time|Generations|
+|-        |-|-|-|-|-|
+|Warmup   |200| |"Steady State"|||
+|1        |200| |"Steady State"|||
+|2        |200| |"Steady State"|||
+|3        |200| |"Steady State"|||
+|4        |200||"Steady State"|||
+|5        |200| |"Steady State"|||
+|6        |200| |"Steady State"|||
+|7        |200| |"Steady State"|||
+|8        |200| |"Steady State"|||
+|9        |200| |"Steady State"|||
+|10       |200| |"Steady State"|||
+
+|Mean Fitness|Mean Time|Mean Generations|
+|-|-|-|
+| | | |
+
+|Tries|Population Szie|Fitness|Selection Method|Time|Generations|
+|-        |-|-|-|-|-|
+|Warmup   |200|0.256940|"Rulette"|3.749s|77|
+|1        |200|0.256940|"Rulette"|2.742s|56|
+|2        |200|0.256739|"Rulette"|2.784s|40|
+|3        |200|0.256939|"Rulette"|2.488s|44|
+|4        |200|0.256950|"Rulette"|2.351s|33|
+|5        |200|0.256939|"Rulette"|1.987s|42|
+|6        |200|0.246939|"Rulette"|2.986s|52|
+|7        |200|0.256939|"Rulette"|2.183s|38|
+|8        |200|0.256939|"Rulette"|2.602s|46|
+|9        |200|0.256941|"Rulette"|2.274s|36|
+|10       |200|0.256940|"Rulette"|2.582s|45|
+
+|Mean Fitness|Mean Time|Mean Generations|
+|-|-|-|
+| | | |
+
+|Tries|Population Szie|Fitness|Selection Method|Time|Generations|
+|-        |-|-|-|-|-|
+|Warmup   |500||"Steady State"|4.059s|32|
+|1        |500||"Steady State"|4.341s|40|
+|2        |500||"Steady State"|5.684s|38|
+|3        |500| |"Steady State"|||
+|4        |500||"Steady State"|||
+|5        |500| |"Steady State"|||
+|6        |500| |"Steady State"|||
+|7        |500| |"Steady State"|||
+|8        |500| |"Steady State"|||
+|9        |500| |"Steady State"|||
+|10       |500| |"Steady State"|||
+
+|Mean Fitness|Mean Time|Mean Generations|
+|-|-|-|
+| | | |
+
+|Tries|Population Szie|Fitness|Selection Method|Time|Generations|
+|-        |-|-|-|-|-|
+|Warmup   |500|0.256938655|"Rulette"|4.914s|45|
+|1        |500|0.256939160|"Rulette"|4.684s|38|
+|2        |500|0.256940051|"Rulette"|4.990s|37|
+|3        |500|0.256939112|"Rulette"|4.660s|38|
+|4        |500|0.256938990|"Rulette"|3.934s|36|
+|5        |500|0.256939483|"Rulette"|5.350s|38|
+|6        |500|0.256939325|"Rulette"|4.470s|39|
+|7        |500|0.256938644|"Rulette"|4.594s|37|
+|8        |500|0.256939366|"Rulette"|4.276s|41|
+|9        |500|0.256942457|"Rulette"|4.936s|33|
+|10       |500|0.256939113|"Rulette"|4.144s|34|
+
+|Mean Fitness|Mean Time|Mean Generations|
+|-|-|-|
+| | | |
