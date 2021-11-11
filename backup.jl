@@ -86,14 +86,85 @@ function initialize_population(population, n=20)
 end
 
 # Sorting the current generation and returning top x of the generation as possible parents
-function select_parents(population, generation=1, number=10)
+function select_parents(population, generation=1)
     population[generation].individuals = sort(population[generation].individuals, by=v -> v.fit)
+    number = Int(floor(length(population[1].individuals)/10))
 	return population[generation].individuals[1:number]
 end
 
-# sorting the generation by the value
-function select_parents_generation(generation::Generation, generation_quantity::Int, number=10)
-    generation.individuals = sort(generation.individuals, by=v -> v.fit)[1:generation_quantity]
+function rulette_selection(population, generation=1)
+    result = Vector{Invi}()
+    population = sort(population[generation].individuals, by=v->v.fit)
+    best = population[1].fit
+
+    for individual in population
+        probability = best/individual.fit
+        chance = rand(Uniform(0.0, 1.0))
+        if probability > chance
+            append!(result, individual)
+        end
+    end
+
+    if length(result) < 2
+        append!(result, population[1])
+    end
+    
+    return result
+end
+
+function rulette_selection(generation::Generation, desired_quantity::Int=100)
+    result = Vector{Invi}()
+    population = sort_generation(generation, desired_quantity)
+    best = population.individuals[1].fit
+
+    for individual in population.individuals
+        probability = (best)/individual.fittness
+        print(probability)
+        chance = rand(Uniform(0.0, 1.0))
+        if probability > chance
+            append!(result, individual)
+        end
+    end
+
+    if length(result) < 2
+        append!(result, population.individuals[best_index])
+    end
+    
+    return Generation(result)
+end
+
+function advanced_selection(population, generation=1, number=10)
+    result = Vector{Invi}()
+    best = Inf
+    second_best = Inf
+    best_index = 1
+    second_best_index = 1
+    for i in 1:length(population[generation].individuals)
+        candidate =  population[generation].individuals[i].fit
+        if best >= candidate
+            second_best = best
+            second_best_index = best_index
+
+            best = candidate
+            best_index = i
+        end
+    end
+
+    for i in 1:length(population[generation].individuals)
+        if abs(population[generation].individuals[i].fit - best) < best*2
+            append!(result, population[generation].individuals[i])
+        end
+    end
+
+    if length(result) < 2
+        append!(result, population[generation].individuals[best_index])
+    end
+
+    return Generation(result)
+end
+
+function sort_generation(generation::Generation, desired_quantity::Int=100)
+    generation.individuals = sort(generation.individuals, by=v -> v.fit)[1:desired_quantity]
 	return generation
 end
 
@@ -202,9 +273,9 @@ function new_generation_evo(data, data_quantity, population, selected)
     # Mutate parents
     selected = mutation(selected)
     # Evaluate new generation
-    offspring = evaluate_generation(data, offspring, length(population[1].individuals), data_quantity)
+    offspring = evaluate_generation(data, offspring, length(offspring.individuals), data_quantity)
     # Select the best from the population λ + γ and return
-    return select_parents_generation(Generation(Vector{Invi}(vcat(selected, offspring.individuals))), length(population[1].individuals), 20)
+    return sort_generation(Generation(Vector{Invi}(vcat(selected, offspring.individuals))), length(population[1].individuals))
 end
 
 function new_generation_gen(data, data_quantity, population, selected)
@@ -296,32 +367,38 @@ function cross_one(parent_first)
     return individual
 end
 
-function EvolutionAlgorithm(data, population_quantity::Int=200, epsilon=0.000001, save_results::Bool=false)
+function EvolutionAlgorithm(data, population_quantity::Int=200, epsilon=0.000001, save_results::Bool=false, selection_method::String="RuletteSelection")
     top = Int(floor(population_quantity/10))
     generation = 1
     population = []
     data_quantity = length(data)
-    best = Inf
     
     initialize_population(population, population_quantity)
     evaluate_generation(data, population, population_quantity, data_quantity, generation)
+    population[1] = sort_generation(population[1], population_quantity)
 
-    while true
-        selected = select_parents(population, generation, top)
+    while generation < population_quantity
+        if selection_method == "RuletteSelection"
+            selected = rulette_selection(population, generation)
+        else
+            selected = select_parents(population, generation)
+        end
+        
         next_generation = new_generation_evo(data, data_quantity, population, selected)
         generation +=1
         append!(population, next_generation)
-        best = population[generation].individuals[1].fit
-        new_best = population[generation].individuals[1+top].fit
+        new_best = population[generation].individuals[1].fit
+        best = mean([x.fit for x in population[generation-1].individuals[1:2]])
 
-        if abs(new_best - best) >= epsilon
+        if abs(new_best - best) > epsilon
             best = new_best
         else
             break
         end
 
         evaluate_generation(
-            data, population, 
+            data, 
+            population, 
             population_quantity, 
             data_quantity, 
             generation
