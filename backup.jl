@@ -328,12 +328,12 @@ function EvolutionAlgorithm(data, population_quantity::Int=200, epsilon=0.000001
         )
     end
 
-    show_generation(population, generation)
+    #show_generation(population, generation)
     
     if save_results
         write_results(population)
     end
-    return select_parents(population, generation, top)
+    return [select_parents(population, generation, top), generation]
 end
 
 function write_results(population)
@@ -361,11 +361,11 @@ end
 function main()
     data = readdlm("ES_data_14.dat")
     @time (best = EvolutionAlgorithm(data, 100, 1e-6, false))
-
-    p1 = plot([data[i] for i in 1:101], [output_function(data, best[1].chromosome, i) for i in 1:101])
-    p2 = plot([data[i] for i in 1:101],[[data[i] for i in 102:202], [output_function(data, best[1].chromosome, i) for i in 1:101]])
+    println(best[1][1].fit, best[2])
+    p1 = plot([data[i] for i in 1:101], [output_function(data, best[1][1].chromosome, i) for i in 1:101])
+    p2 = plot([data[i] for i in 1:101],[[data[i] for i in 102:202], [output_function(data, best[1][1].chromosome, i) for i in 1:101]])
     
-    p3 = scatter([data[i] for i in 1:101], [output_function(data, best[1].chromosome, i) for i in 1:101], color="blue")
+    p3 = scatter([data[i] for i in 1:101], [output_function(data, best[1][1].chromosome, i) for i in 1:101], color="blue")
     p4 = scatter([data[i] for i in 1:101],[data[i] for i in 102:202])
 
     plot(p1, p2, p3, p4, layout=(2,2))
