@@ -240,7 +240,7 @@ With epsilon equal to 1e-6
 
 |Mean Fitness|Mean Time|Mean Generations|
 |-|-|-|
-| | | |
+| 0.235434 | 1.47417 | 34.5833 |
 
 |Tries|Population Szie|Fitness|Selection Method|Time|Generations|
 |-        |-|-|-|-|-|
@@ -259,7 +259,7 @@ With epsilon equal to 1e-6
 
 |Mean Fitness|Mean Time|Mean Generations|
 |-|-|-|
-| | | |
+| 0.235529 | 1.5375 | 46 |
 
 
 
@@ -279,7 +279,7 @@ With epsilon equal to 1e-6
 
 |Mean Fitness|Mean Time|Mean Generations|
 |-|-|-|
-| | | |
+| 0.25697 | 1.91955 | 29.1818 |
 
 |Tries|Population Szie|Fitness|Selection Method|Time|Generations|
 |-        |-|-|-|-|-|
@@ -297,7 +297,7 @@ With epsilon equal to 1e-6
 
 |Mean Fitness|Mean Time|Mean Generations|
 |-|-|-|
-| | | |
+| 0.256013 | 2.61164 | 46.2727 |
 
 |Tries|Population Szie|Fitness|Selection Method|Time|Generations|
 |-        |-|-|-|-|-|
@@ -315,7 +315,7 @@ With epsilon equal to 1e-6
 
 |Mean Fitness|Mean Time|Mean Generations|
 |-|-|-|
-| | | |
+| 0.25694 | 3.08827 | 24.6364 |
 
 |Tries|Population Szie|Fitness|Selection Method|Time|Generations|
 |-        |-|-|-|-|-|
@@ -333,4 +333,4 @@ With epsilon equal to 1e-6
 
 |Mean Fitness|Mean Time|Mean Generations|
 |-|-|-|
-| | | |
+| 0.256939 | 4.632 | 37.8182 |
