@@ -222,7 +222,8 @@ To avoid too long execution times which could took infinitly lon,g taking into a
 
 
 # Experimentation
-With epsilon equal to 1e-6
+With epsilon equal to **1e-6**
+Data set nr **14**
 
 |Tries|Population Szie|Fitness|Selection Method|Time|Generations|
 |-        |-|-|-|-|-|
@@ -240,7 +241,7 @@ With epsilon equal to 1e-6
 
 |Mean Fitness|Mean Time|Mean Generations|
 |-|-|-|
-| 0.235434 | 1.47417 | 34.5833 |
+| 0.256946 | 1.47417 | 34.5833 |
 
 |Tries|Population Szie|Fitness|Selection Method|Time|Generations|
 |-        |-|-|-|-|-|
@@ -259,7 +260,7 @@ With epsilon equal to 1e-6
 
 |Mean Fitness|Mean Time|Mean Generations|
 |-|-|-|
-| 0.235529 | 1.5375 | 46 |
+| 0.256940 | 1.5375 | 46 |
 
 
 
@@ -279,7 +280,7 @@ With epsilon equal to 1e-6
 
 |Mean Fitness|Mean Time|Mean Generations|
 |-|-|-|
-| 0.25697 | 1.91955 | 29.1818 |
+| 0.256970 | 1.91955 | 29.1818 |
 
 |Tries|Population Szie|Fitness|Selection Method|Time|Generations|
 |-        |-|-|-|-|-|
@@ -289,7 +290,7 @@ With epsilon equal to 1e-6
 |3        |200|0.256939|"Rulette"|2.488s|44|
 |4        |200|0.256950|"Rulette"|2.351s|33|
 |5        |200|0.256939|"Rulette"|1.987s|42|
-|6        |200|0.246939|"Rulette"|2.986s|52|
+|6        |200|0.256939|"Rulette"|2.986s|52|
 |7        |200|0.256939|"Rulette"|2.183s|38|
 |8        |200|0.256939|"Rulette"|2.602s|46|
 |9        |200|0.256941|"Rulette"|2.274s|36|
@@ -297,7 +298,7 @@ With epsilon equal to 1e-6
 
 |Mean Fitness|Mean Time|Mean Generations|
 |-|-|-|
-| 0.256013 | 2.61164 | 46.2727 |
+| 0.256940 | 2.61164 | 46.2727 |
 
 |Tries|Population Szie|Fitness|Selection Method|Time|Generations|
 |-        |-|-|-|-|-|
@@ -315,7 +316,7 @@ With epsilon equal to 1e-6
 
 |Mean Fitness|Mean Time|Mean Generations|
 |-|-|-|
-| 0.25694 | 3.08827 | 24.6364 |
+| 0.256939803 | 3.08827 | 24.6364 |
 
 |Tries|Population Szie|Fitness|Selection Method|Time|Generations|
 |-        |-|-|-|-|-|
@@ -333,4 +334,4 @@ With epsilon equal to 1e-6
 
 |Mean Fitness|Mean Time|Mean Generations|
 |-|-|-|
-| 0.256939 | 4.632 | 37.8182 |
+| 0.256939487 | 4.632 | 37.8182 |
