@@ -226,17 +226,17 @@ With epsilon equal to 1e-6
 
 |Tries|Population Szie|Fitness|Selection Method|Time|Generations|
 |-        |-|-|-|-|-|
-|Warmup   |100| |"Steady State"|||
-|1        |100| |"Steady State"|||
-|2        |100| |"Steady State"|||
-|3        |100| |"Steady State"|||
-|4        |100||"Steady State"|||
-|5        |100| |"Steady State"|||
-|6        |100| |"Steady State"|||
-|7        |100| |"Steady State"|||
-|8        |100| |"Steady State"|||
-|9        |100| |"Steady State"|||
-|10       |100| |"Steady State"|||
+|Warmup   |100|0.255943|"Steady State"|2.113s|45|
+|1        |100|0.256956|"Steady State"|1.272s|36|
+|2        |100|0.256939|"Steady State"|1.274s|32|
+|3        |100|0.256940|"Steady State"|1.547s|44|
+|4        |100|0.256754|"Steady State"|1.350s|37|
+|5        |100|0.256976|"Steady State"|1.301s|24|
+|6        |100|0.256939|"Steady State"|1.890s|38|
+|7        |100|0.256944|"Steady State"|1.814s|59|
+|8        |100|0.256939|"Steady State"|1.729s|41|
+|9        |100|0.256939|"Steady State"|1.792s|28|
+|10       |100|0.256942|"Steady State"|1.608s|31|
 
 |Mean Fitness|Mean Time|Mean Generations|
 |-|-|-|
@@ -265,17 +265,17 @@ With epsilon equal to 1e-6
 
 |Tries|Population Szie|Fitness|Selection Method|Time|Generations|
 |-        |-|-|-|-|-|
-|Warmup   |200| |"Steady State"|||
-|1        |200| |"Steady State"|||
-|2        |200| |"Steady State"|||
-|3        |200| |"Steady State"|||
-|4        |200||"Steady State"|||
-|5        |200| |"Steady State"|||
-|6        |200| |"Steady State"|||
-|7        |200| |"Steady State"|||
-|8        |200| |"Steady State"|||
-|9        |200| |"Steady State"|||
-|10       |200| |"Steady State"|||
+|Warmup   |200|0.256941|"Steady State"|2.349s|32|
+|1        |200|0.256939|"Steady State"|1.814s|31|
+|2        |200|0.257233|"Steady State"|1.840s|23|
+|3        |200|0.256939|"Steady State"|1.994s|26|
+|4        |200|0.256975|"Steady State"|1.730s|22|
+|5        |200|0.256941|"Steady State"|1.686s|31|
+|6        |200|0.256939|"Steady State"|2.186s|29|
+|7        |200|0.256939|"Steady State"|1.873s|29|
+|8        |200|0.256942|"Steady State"|1.469s|28|
+|9        |200|0.256939|"Steady State"|2.057s|36|
+|10       |200|0.256939|"Steady State"|2.117s|34|
 
 |Mean Fitness|Mean Time|Mean Generations|
 |-|-|-|
@@ -301,17 +301,17 @@ With epsilon equal to 1e-6
 
 |Tries|Population Szie|Fitness|Selection Method|Time|Generations|
 |-        |-|-|-|-|-|
-|Warmup   |500||"Steady State"|4.059s|32|
-|1        |500||"Steady State"|4.341s|40|
-|2        |500||"Steady State"|5.684s|38|
-|3        |500| |"Steady State"|||
-|4        |500||"Steady State"|||
-|5        |500| |"Steady State"|||
-|6        |500| |"Steady State"|||
-|7        |500| |"Steady State"|||
-|8        |500| |"Steady State"|||
-|9        |500| |"Steady State"|||
-|10       |500| |"Steady State"|||
+|Warmup   |500|0.256939255|"Steady State"|3.210s|20|
+|1        |500|0.256939145|"Steady State"|3.264s|26|
+|2        |500|0.256939695|"Steady State"|3.180s|28|
+|3        |500|0.256939617|"Steady State"|3.177s|24|
+|4        |500|0.256939134|"Steady State"|2.906s|24|
+|5        |500|0.256938702|"Steady State"|3.360s|25|
+|6        |500|0.256939630|"Steady State"|3.495s|26|
+|7        |500|0.256938980|"Steady State"|2.769s|28|
+|8        |500|0.256940246|"Steady State"|2.871s|22|
+|9        |500|0.256939078|"Steady State"|3.454s|26|
+|10       |500|0.256944352|"Steady State"|2.285s|22|
 
 |Mean Fitness|Mean Time|Mean Generations|
 |-|-|-|
