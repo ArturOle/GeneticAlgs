@@ -133,41 +133,10 @@ function rulette_selection(generation::Generation, desired_quantity::Int=100)
     return Generation(result)
 end
 
-function advanced_selection(population, generation=1, number=10)
-    result = Vector{Invi}()
-    best = Inf
-    second_best = Inf
-    best_index = 1
-    second_best_index = 1
-    for i in 1:length(population[generation].individuals)
-        candidate =  population[generation].individuals[i].fit
-        if best >= candidate
-            second_best = best
-            second_best_index = best_index
-
-            best = candidate
-            best_index = i
-        end
-    end
-
-    for i in 1:length(population[generation].individuals)
-        if abs(population[generation].individuals[i].fit - best) < best*2
-            append!(result, population[generation].individuals[i])
-        end
-    end
-
-    if length(result) < 2
-        append!(result, population[generation].individuals[best_index])
-    end
-
-    return Generation(result)
-end
-
 function sort_generation(generation::Generation, desired_quantity::Int=100)
     generation.individuals = sort(generation.individuals, by=v -> v.fit)[1:desired_quantity]
 	return generation
 end
-
 
 function show_generation(population, generation)
     for i in 1:length(population[generation].individuals)
