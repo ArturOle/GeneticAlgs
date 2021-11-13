@@ -1,10 +1,73 @@
-# EvoAlg
+
+<style>
+    .toc {
+        page-break-after: always;
+    }
+    .title-page {
+        border: none;
+        page-break-after: always;
+    }
+    .title-page h1 {
+        border-bottom: none;
+        text-align: center;
+    }
+    .title-page h2 {
+        border-bottom: none;
+        text-align: center;
+    }
+    .title-page table {
+        display: block;
+        float: right;
+        right: -2em;
+    }
+    .flex {
+        display: flex;
+        justify-content: space-between;
+    }
+    figure {
+        display: block;
+        background: #eee;
+        text-align: center;
+        border-radius: 0.1em;
+        padding: 0.7em;
+        border: solid 1px lightgrey;
+        color: black;
+    }
+    figcaption {
+        margin: 0.7em 0 0 0;
+    }
+    blockquote {
+        border: none;
+    }
+</style>
+
+<section class="title-page">
+    <div class="flex">
+    <p>
+        Group <b>MK2</b>
+    </p>
+    <p>
+    </p>
+    </div>
+    
+# Artifical Inteligence
+# Laboratory Report
+
+## 2. Evolutional Strategies
+
+
+Wojciech Bieniek
+Artur Oleksiński
+
+</section>
+
+<div style="page-break-after: always;"></div>
 
 ## Introduction
 
 Evolutionary Strategies which is implemented in this project belongs to the family of genetic algorithms. This project takes (λ + γ) approach, this mean that for the next generation we take individuals from both parents and offsprings/children. Evolutionary Strategies take advantege of sigma-besed mustation proces which is the main drive for improvment in this implementation.
 
-#
+
 ## Algorithm
 
 1. **Initialization** - Initialization of the base population (generation 1)
@@ -16,46 +79,53 @@ Evolutionary Strategies which is implemented in this project belongs to the fami
 7. **Loop** - loop until stop condition is met
 
 ```julia
-function EvolutionAlgorithm(data, population_quantity::Int=200, epsilon=0.000001, save_results::Bool=false)
+function EvolutionAlgorithm(
+    data, 
+    population_quantity::Int=200, 
+    epsilon=0.000001, 
+    save_results::Bool=false, 
+    selection_method::String="RuletteSelection"
+)
+
     top = Int(floor(population_quantity/10))
     generation = 1
     population = []
     data_quantity = length(data)
-    best = Inf
     
     initialize_population(population, population_quantity)
     evaluate_generation(data, population, population_quantity, data_quantity, generation)
+    population[1] = sort_generation(population[1], population_quantity)
 
-    while true
-        selected = select_parents(population, generation, top)
+    while generation < population_quantity
+        if selection_method == "RuletteSelection"
+            selected = rulette_selection(population, generation)
+        else
+            selected = select_parents(population, generation)
+        end
+        
         next_generation = new_generation_evo(data, data_quantity, population, selected)
         generation +=1
         append!(population, next_generation)
-        best = population[generation].individuals[1].fit
-        new_best = population[generation].individuals[1+top].fit
+        new_best = population[generation].individuals[1].fit
+        best = mean([x.fit for x in population[generation-1].individuals[1:2]])
 
-        if abs(new_best - best) >= epsilon
+        if abs(new_best - best) > epsilon
             best = new_best
         else
             break
         end
 
         evaluate_generation(
-            data, population, 
+            data, 
+            population, 
             population_quantity, 
             data_quantity, 
             generation
         )
     end
-
-    show_generation(population, generation)
-    
-    if save_results
-        write_results(population)
-    end
-    return select_parents(population, generation, top)
-end
 ```
+<div style="page-break-after: always;"></div>
+
 ## Inintialization
 
 Initialization is start of the program. It is a part where we create our "generation 1". This is also the place for initialization of all necessary variables.
@@ -72,7 +142,7 @@ initialize_population(population, population_quantity)
 evaluate_generation(data, population, population_quantity, data_quantity, generation)
 
 ```
-#
+
 ## Selection
 
 Project includes two diffrent approaches to the selection of parents.
@@ -121,7 +191,9 @@ function select_parents(population, generation, number)
 	return population[generation].individuals[1:number]
 end
 ```
-#
+
+<div style="page-break-after: always;"></div>
+
 ## Generating the new Generation
 
 After selecting the candidates for maiting pool we can proceed to creating new generation.
@@ -138,7 +210,11 @@ function new_generation_evo(data, data_quantity, population, selected)
     # Evaluate new generation
     offspring = evaluate_generation(data, offspring, length(population[1].individuals), data_quantity)
     # Select the best from the population λ + γ and return
-    return select_parents_generation(Generation(Vector{Invi}(vcat(selected, offspring.individuals))), length(population[1].individuals), 20)
+    return select_parents_generation(
+        Generation(Vector{Invi}(vcat(selected, offspring.individuals))), 
+        length(population[1].individuals), 
+        20
+    )
 end
 ```
 
@@ -205,7 +281,6 @@ end
 
 After this, new generation is being evaluated for the fitness values, sorted and choppend to the proper population size.
 
-#
 ## Stop condition
 
 The mechanism which main purpouse is to prevent the algorithm from going into infinity.
@@ -220,6 +295,7 @@ We use the absolute value of subraction of best fitnes value from current genera
 
 To avoid too long execution times which could took infinitly lon,g taking into account the random nature of the algorithm, we cap the number of generations. If generation > max then end.
 
+<div style="page-break-after: always;"></div>
 
 # Experimentation
 With epsilon equal to **1e-6**
@@ -262,7 +338,7 @@ Data set nr **14**
 |-|-|-|
 | 0.256940 | 1.5375 | 46 |
 
-
+<div style="page-break-after: always;"></div>
 
 |Tries|Population Szie|Fitness|Selection Method|Time|Generations|
 |-        |-|-|-|-|-|
@@ -299,6 +375,8 @@ Data set nr **14**
 |Mean Fitness|Mean Time|Mean Generations|
 |-|-|-|
 | 0.256940 | 2.61164 | 46.2727 |
+
+<div style="page-break-after: always;"></div>
 
 |Tries|Population Szie|Fitness|Selection Method|Time|Generations|
 |-        |-|-|-|-|-|
