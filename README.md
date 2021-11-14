@@ -1,67 +1,17 @@
 
-<style>
-    .toc {
-        page-break-after: always;
-    }
-    .title-page {
-        border: none;
-        page-break-after: always;
-    }
-    .title-page h1 {
-        border-bottom: none;
-        text-align: center;
-    }
-    .title-page h2 {
-        border-bottom: none;
-        text-align: center;
-    }
-    .title-page table {
-        display: block;
-        float: right;
-        right: -2em;
-    }
-    .flex {
-        display: flex;
-        justify-content: space-between;
-    }
-    figure {
-        display: block;
-        background: #eee;
-        text-align: center;
-        border-radius: 0.1em;
-        padding: 0.7em;
-        border: solid 1px lightgrey;
-        color: black;
-    }
-    figcaption {
-        margin: 0.7em 0 0 0;
-    }
-    blockquote {
-        border: none;
-    }
-</style>
 
-<section class="title-page">
-    <div class="flex">
-    <p>
-        Group <b>MK2</b>
-    </p>
-    <p>
-    </p>
-    </div>
     
 # Artifical Inteligence
 # Laboratory Report
 
 ## 2. Evolutional Strategies
 
+### Authors:
 
 Wojciech Bieniek
+
 Artur Oleksiński
 
-</section>
-
-<div style="page-break-after: always;"></div>
 
 ## Introduction
 
