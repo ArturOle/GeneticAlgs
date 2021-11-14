@@ -292,8 +292,12 @@ function crossover(data, data_quantity, population, selected, separator)
         # Choosing the first parent randomly
         parent1 = rand(1:len_s)
         # Choosing the second parent randomly from population without parent1
-        leftover = [r for r in 1:len_s-1 if r!=parent1]  
-        parent2 = rand(leftover)
+        leftover = [r for r in 1:len_s-1 if r!=parent1]
+        if isempty(leftover)
+            parent2=parent1
+        else
+            parent2 = rand(leftover)
+        end
         # Creating Child
         child = cross_two(data, data_quantity, selected[parent1], selected[parent2], separator)
         # Adding the child to the offspring
@@ -406,8 +410,9 @@ end
 
 function main()
     data = readdlm("ES_data_14.dat")
-    @time (best = EvolutionAlgorithm(data, 100, 1e-6, false, "RuletteSelection"))
-    println(best[1][1].fit, best[2])
+    @time (best = EvolutionAlgorithm(data, 1000, 1e-6, false, "RuletteSelection"))
+    println(best[1][1].fit)
+    println(best[2])
     p1 = plot([data[i] for i in 1:101], [output_function(data, best[1][1].chromosome, i) for i in 1:101])
     p2 = plot([data[i] for i in 1:101],[[data[i] for i in 102:202], [output_function(data, best[1][1].chromosome, i) for i in 1:101]])
     
